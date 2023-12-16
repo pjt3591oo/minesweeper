@@ -24,8 +24,6 @@ function createMap(rows, columns, mineCount) {
 
 
 function initGame(width, height, mineCount) {
-  GAME_WIDTH = width;
-  GAME_HEIGHT = height;
 
   MINE_MAP = createMap(width, height, mineCount);
   SEARCH_MAP = Array.from({ length: width }, () => Array(height).fill(NO_SEARCH))
@@ -173,9 +171,21 @@ function getAroundInfo(row, column) {
   }
 }
 
-initGame(20, 20, 40);
+document.getElementById('submit').addEventListener('click', () => {
+  GAME_WIDTH = parseInt(document.getElementById('size-width').value);
+  GAME_HEIGHT = parseInt(document.getElementById('size-height').value);
+  const mineCount = parseInt(document.getElementById('mine-count').value);
 
-for (let i = 0 ; i < MINE_MAP.length * MINE_MAP[0].length ; ++i) {
-  columns[i].addEventListener('click', clickEventHandler);
-  columns[i].addEventListener('contextmenu', rightClickEventhandler);
-}
+  if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
+    alert("게임 크기보다 지뢰가 많으면 안됩니다.");
+    return;
+  }
+
+  initGame(GAME_WIDTH, GAME_HEIGHT, mineCount);
+  
+  for (let i = 0 ; i < MINE_MAP.length * MINE_MAP[0].length ; ++i) {
+    columns[i].addEventListener('click', clickEventHandler);
+    columns[i].addEventListener('contextmenu', rightClickEventhandler);
+  }
+})
+

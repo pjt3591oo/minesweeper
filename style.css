@@ -16,7 +16,7 @@
   display: flex;
 }
 
-.game-map {
+.p10 {
   padding: 10px;
 }
 
@@ -61,4 +61,22 @@ li.column {
 
 .debug-mine {
   background-color: red;
+}
+
+#controller {
+  display: flex;
+  flex-direction: column; 
+}
+
+#controller input,
+#controller button  {
+  box-sizing: border-box;
+  width: 240px;
+  height: 36px;
+  padding: 5px;
+  margin: 12px;
+  border-radius: 5px;
+  font-size: 18px;
+  border: 1px solid gray;
+  cursor: pointer;
 }
