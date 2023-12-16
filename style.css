@@ -1,0 +1,64 @@
+* {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  overflow-y: scroll no; 
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+
+.container,
+.other-container {
+  display: flex;
+}
+
+.game-map {
+  padding: 10px;
+}
+
+
+.row ul {
+  display: flex;
+  width: 900px;
+}
+
+li.column {
+  list-style: none;
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flag {
+  background-image : url('./flag.png');
+  background-size: cover;
+}
+.mine {
+  background-image : url('./mine.png');
+  background-size: cover;
+}
+.open-near-mine {
+  background-color: rgba(128, 128, 128, 0.5);
+  border: 1px solid gray;
+  color: black;
+  font-weight: 900;
+}
+
+.open-disable {
+  background-color: rgba(128, 128, 128, 0.3);
+  border: 1px solid gray;
+  opacity: 0.3;
+}
+
+.debug-mine {
+  background-color: red;
+}
