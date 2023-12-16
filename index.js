@@ -1,8 +1,11 @@
 const gameContainer = document.getElementById('minesweeper')
+const previewContainer = document.getElementById('preview')
 const columns = document.getElementsByClassName('column');
+
 
 let GAME_WIDTH = 0;
 let GAME_HEIGHT = 0;
+
 
 function createMap(rows, columns, mineCount) {
   // 초기화된 맵 생성
@@ -25,16 +28,16 @@ function createMap(rows, columns, mineCount) {
 
 function initGame(width, height, mineCount) {
 
-  MINE_MAP = createMap(width, height, mineCount);
-  SEARCH_MAP = Array.from({ length: width }, () => Array(height).fill(NO_SEARCH))
-  FLAG_MAP = Array.from({ length: width }, () => Array(height).fill(UN_FLAG))
+  MINE_MAP = createMap(height, width, mineCount);
+  SEARCH_MAP = Array.from({ length: height }, () => Array(width).fill(NO_SEARCH))
+  FLAG_MAP = Array.from({ length: height }, () => Array(width).fill(UN_FLAG))
 
   let temp = `
     <ul>
   `;
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     temp += `
-      <li class="row">
+      <li class="row" style="width: ${width * 30}px;">
         <ul>
     `;
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
@@ -49,6 +52,7 @@ function initGame(width, height, mineCount) {
   temp += `</ul>`;
   gameContainer.innerHTML = temp
 }
+
 
 function clickEventHandler(e) {
   const { row, column } = this.dataset;
@@ -65,6 +69,7 @@ function clickEventHandler(e) {
 
   render();
 }
+
 
 function open(row, column) {
   if (row < 0 || column < 0) return;
@@ -87,6 +92,7 @@ function open(row, column) {
   }
 }
 
+
 function render() {
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
@@ -108,6 +114,7 @@ function render() {
 
   }
 }
+
 
 function rightClickEventhandler(e) {
   e.preventDefault(); // 기본 동작(컨텍스트 메뉴 표시)을 막습니다.
@@ -132,6 +139,7 @@ function rightClickEventhandler(e) {
   }
 }
 
+
 function showMine() {
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
@@ -141,6 +149,7 @@ function showMine() {
     }
   }
 }
+
 
 function checkMine() {
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
@@ -154,6 +163,7 @@ function checkMine() {
 
   return true;
 }
+
 
 function getAroundInfo(row, column) {
   // (row-1, column-1), (row-1, column), (row-1, column+1)
@@ -171,9 +181,10 @@ function getAroundInfo(row, column) {
   }
 }
 
+
 document.getElementById('submit').addEventListener('click', () => {
-  GAME_WIDTH = parseInt(document.getElementById('size-width').value);
-  GAME_HEIGHT = parseInt(document.getElementById('size-height').value);
+  GAME_WIDTH = parseInt(document.getElementById('size').value);
+  GAME_HEIGHT = GAME_WIDTH;
   const mineCount = parseInt(document.getElementById('mine-count').value);
 
   if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
@@ -189,3 +200,25 @@ document.getElementById('submit').addEventListener('click', () => {
   }
 })
 
+
+document.getElementById('debug-submit').addEventListener('click', () => {
+  let temp = `
+    <ul>
+  `;
+  for (let i = 0 ; i < MINE_MAP.length ; ++i) {
+    temp += `
+      <li class="row" style="width: ${GAME_WIDTH * 30}px;">
+        <ul>
+    `;
+    for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
+      temp += `<li class="column ${MINE_MAP[i][j] === MAP_M ? "mine" : ""}" data-row=${i} data-column=${j}></li>`
+    }
+    temp += `
+      </li>
+    </ul>
+  `;
+  }
+
+  temp += `</ul>`;
+  previewContainer.innerHTML = temp
+})

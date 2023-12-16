@@ -23,7 +23,7 @@
 
 .row ul {
   display: flex;
-  width: 900px;
+  /* width: 900px; */
 }
 
 li.column {
