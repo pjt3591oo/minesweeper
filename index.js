@@ -94,6 +94,7 @@ function open(row, column) {
 
 
 function render() {
+  let falgCount = 0;
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
       const target = columns[i * MINE_MAP.length + j];
@@ -109,10 +110,12 @@ function render() {
 
       } else if (FLAG_MAP[i][j]) {
         target.classList.add("flag");
+        falgCount++;
       }
     }
-
   }
+
+  document.getElementById('flag-count-text').innerText = `깃발 갯수: ${falgCount}`;
 }
 
 
@@ -186,6 +189,7 @@ document.getElementById('submit').addEventListener('click', () => {
   GAME_WIDTH = parseInt(document.getElementById('size').value);
   GAME_HEIGHT = GAME_WIDTH;
   const mineCount = parseInt(document.getElementById('mine-count').value);
+  document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
 
   if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
     alert("게임 크기보다 지뢰가 많으면 안됩니다.");
@@ -205,6 +209,7 @@ document.getElementById('debug-submit').addEventListener('click', () => {
   let temp = `
     <ul>
   `;
+
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     temp += `
       <li class="row" style="width: ${GAME_WIDTH * 30}px;">
@@ -214,11 +219,12 @@ document.getElementById('debug-submit').addEventListener('click', () => {
       temp += `<li class="column ${MINE_MAP[i][j] === MAP_M ? "mine" : ""}" data-row=${i} data-column=${j}></li>`
     }
     temp += `
-      </li>
-    </ul>
-  `;
+        </li>
+      </ul>
+    `;
   }
 
   temp += `</ul>`;
+
   previewContainer.innerHTML = temp
 })
