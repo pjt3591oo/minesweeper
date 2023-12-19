@@ -1,9 +1,19 @@
-const gameContainer = document.getElementById('minesweeper')
-const previewContainer = document.getElementById('preview')
+const gameContainer = document.getElementById('minesweeper');
+const previewContainer = document.getElementById('preview');
+const playTimerContainer = document.getElementById('play-time');
 const columns = document.getElementsByClassName('column');
 
 let GAME_WIDTH = 0;
 let GAME_HEIGHT = 0;
+
+let timeCount = 0;
+let timerId = null;
+
+function timeerStart() {
+  timerId = setInterval(() => {
+    playTimerContainer.innerHTML = `플레이 시간: ${++timeCount}초`;
+  }, 1000);
+}
 
 function createMap(rows, columns, mineCount) {
   // 초기화된 맵 생성
@@ -49,6 +59,7 @@ function initGame(width, height, mineCount) {
 
   temp += `</ul>`;
   gameContainer.innerHTML = temp
+  timeerStart();
 }
 
 
@@ -60,9 +71,10 @@ function clickEventHandler(e) {
   if (parseRow < 0 || column < 0) return;
   if (parseRow >= MINE_MAP.length || parseColumn >= MINE_MAP[0].length) return
 
-  if (SEARCH_MAP[parseRow][parseColumn] || FLAG_MAP[parseRow][parseColumn]) return;
+  if (FLAG_MAP[parseRow][parseColumn]) return;
 
   if (MINE_MAP[parseRow][parseColumn]) {
+    timerId && clearInterval(timerId);
     showMine();
     alert('졌습니다')
     return;
@@ -75,6 +87,9 @@ function clickEventHandler(e) {
 
 
 function open(row, column) {
+  // 재귀 탐색을 하는 과정에서 이미 탐색된 셀은 건너뛴다.
+  if (SEARCH_MAP[row][column] ) return;
+
   const { aroundPositions, aroundMines } = getAroundInfo(row, column);
 
   if (
@@ -136,7 +151,8 @@ function rightClickEventhandler(e) {
   render();
 
   if (checkMine()) {
-  return alert('모든 지뢰를 찾았습니다.');;
+    timerId && clearInterval(timerId);
+    return alert('모든 지뢰를 찾았습니다.');;
   }
 }
 
