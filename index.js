@@ -241,17 +241,18 @@ function previewRender () {
 
 document.getElementById('submit').addEventListener('click', () => {
   GAME_WIDTH = parseInt(document.getElementById('size').value) || 10;
-  if (GAME_WIDTH > 100) {
-    GAME_WIDTH = 100;
-  }
   GAME_HEIGHT = GAME_WIDTH;
   const mineCount = parseInt(document.getElementById('mine-count').value) || 15;
-  document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
 
-  if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
-    alert("게임 크기보다 지뢰가 많으면 안됩니다.");
+  const isValid = validation(GAME_WIDTH, GAME_HEIGHT, mineCount);
+  
+  if (isValid) {
     return;
   }
+
+  document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
+
+
 
   initGame(GAME_WIDTH, GAME_HEIGHT, mineCount);
   
@@ -275,3 +276,27 @@ document.getElementById('debug-submit').addEventListener('click', () => {
   }
   previewRender();
 })
+
+function validation(width, height, mineCount) {
+  if (width < 10) {
+    alert("게임 사이즈는 최소 10입니다.");
+    return true;
+  }
+
+  if (width > 100) {
+    alert("게임 사이즈는 최대 100입니다.");
+    return true;
+  }
+
+  if (mineCount < 1) {
+    alert("지뢰는 최소 1개여야 합니다.");
+    return true;
+  }
+
+  if (width * height < mineCount) {
+    alert("게임 크기보다 지뢰가 많으면 안됩니다.")
+    return true;
+  }
+  
+  return false;
+}
