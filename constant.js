@@ -1,3 +1,10 @@
+const GAME_STATUS = {
+  READY: 'READY',
+  END: 'END',
+  PLAY: 'PLAY',
+  PAUSE: 'PAUSE',
+};
+
 const MAP_S = 0;
 const MAP_M = 1;
 let MINE_MAP = [
