@@ -2,10 +2,8 @@ const gameContainer = document.getElementById('minesweeper')
 const previewContainer = document.getElementById('preview')
 const columns = document.getElementsByClassName('column');
 
-
 let GAME_WIDTH = 0;
 let GAME_HEIGHT = 0;
-
 
 function createMap(rows, columns, mineCount) {
   // 초기화된 맵 생성
@@ -59,6 +57,11 @@ function clickEventHandler(e) {
   const parseRow = parseInt(row);
   const parseColumn = parseInt(column);
   
+  if (parseRow < 0 || column < 0) return;
+  if (parseRow >= MINE_MAP.length || parseColumn >= MINE_MAP[0].length) return
+
+  if (SEARCH_MAP[parseRow][parseColumn] || FLAG_MAP[parseRow][parseColumn]) return;
+
   if (MINE_MAP[parseRow][parseColumn]) {
     showMine();
     alert('졌습니다')
@@ -72,11 +75,6 @@ function clickEventHandler(e) {
 
 
 function open(row, column) {
-  if (row < 0 || column < 0) return;
-  if (row >= MINE_MAP.length || column >= MINE_MAP[0].length) return
-
-  if (SEARCH_MAP[row][column]) return;
-  
   const { aroundPositions, aroundMines } = getAroundInfo(row, column);
 
   if (
