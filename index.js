@@ -13,6 +13,12 @@ let timerId = null;
 let gameStatus = GAME_STATUS.READY;
 
 function timeerStart() {
+  if (timerId) {
+    clearInterval(timerId);
+  }
+
+  timeCount = 0;
+
   timerId = setInterval(() => {
     playTimerContainer.innerHTML = `플레이 시간: ${++timeCount}초`;
   }, 1000);
@@ -235,6 +241,9 @@ function previewRender () {
 
 document.getElementById('submit').addEventListener('click', () => {
   GAME_WIDTH = parseInt(document.getElementById('size').value) || 10;
+  if (GAME_WIDTH > 100) {
+    GAME_WIDTH = 100;
+  }
   GAME_HEIGHT = GAME_WIDTH;
   const mineCount = parseInt(document.getElementById('mine-count').value) || 15;
   document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
