@@ -3,11 +3,14 @@ const previewContainer = document.getElementById('preview');
 const playTimerContainer = document.getElementById('play-time');
 const columns = document.getElementsByClassName('column');
 
+
 let GAME_WIDTH = 0;
 let GAME_HEIGHT = 0;
 
 let timeCount = 0;
 let timerId = null;
+
+let gameStatus = GAME_STATUS.READY;
 
 function timeerStart() {
   timerId = setInterval(() => {
@@ -68,12 +71,15 @@ function clickEventHandler(e) {
   const parseRow = parseInt(row);
   const parseColumn = parseInt(column);
   
+  if (gameStatus !== GAME_STATUS.PLAY) return;
+
   if (parseRow < 0 || column < 0) return;
   if (parseRow >= MINE_MAP.length || parseColumn >= MINE_MAP[0].length) return
 
   if (FLAG_MAP[parseRow][parseColumn]) return;
 
   if (MINE_MAP[parseRow][parseColumn]) {
+    gameStatus = GAME_STATUS.END;
     timerId && clearInterval(timerId);
     showMine();
     alert('졌습니다')
@@ -134,6 +140,8 @@ function render() {
 
 function rightClickEventhandler(e) {
   e.preventDefault(); // 기본 동작(컨텍스트 메뉴 표시)을 막습니다.
+  
+  if (gameStatus !== GAME_STATUS.PLAY) return;
 
   const { row, column } = this.dataset;
 
@@ -152,6 +160,7 @@ function rightClickEventhandler(e) {
 
   if (checkMine()) {
     timerId && clearInterval(timerId);
+    gameStatus = GAME_STATUS.END;
     return alert('모든 지뢰를 찾았습니다.');;
   }
 }
@@ -199,27 +208,7 @@ function getAroundInfo(row, column) {
 }
 
 
-document.getElementById('submit').addEventListener('click', () => {
-  GAME_WIDTH = parseInt(document.getElementById('size').value);
-  GAME_HEIGHT = GAME_WIDTH;
-  const mineCount = parseInt(document.getElementById('mine-count').value);
-  document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
-
-  if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
-    alert("게임 크기보다 지뢰가 많으면 안됩니다.");
-    return;
-  }
-
-  initGame(GAME_WIDTH, GAME_HEIGHT, mineCount);
-  
-  for (let i = 0 ; i < MINE_MAP.length * MINE_MAP[0].length ; ++i) {
-    columns[i].addEventListener('click', clickEventHandler);
-    columns[i].addEventListener('contextmenu', rightClickEventhandler);
-  }
-})
-
-
-document.getElementById('debug-submit').addEventListener('click', () => {
+function previewRender () {
   let temp = `
     <ul>
   `;
@@ -241,4 +230,37 @@ document.getElementById('debug-submit').addEventListener('click', () => {
   temp += `</ul>`;
 
   previewContainer.innerHTML = temp
+}
+
+
+document.getElementById('submit').addEventListener('click', () => {
+  GAME_WIDTH = parseInt(document.getElementById('size').value) || 10;
+  GAME_HEIGHT = GAME_WIDTH;
+  const mineCount = parseInt(document.getElementById('mine-count').value) || 15;
+  document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
+
+  if (GAME_WIDTH * GAME_HEIGHT < mineCount) {
+    alert("게임 크기보다 지뢰가 많으면 안됩니다.");
+    return;
+  }
+
+  initGame(GAME_WIDTH, GAME_HEIGHT, mineCount);
+  
+  for (let i = 0 ; i < MINE_MAP.length * MINE_MAP[0].length ; ++i) {
+    columns[i].addEventListener('click', clickEventHandler);
+    columns[i].addEventListener('contextmenu', rightClickEventhandler);
+  }
+
+  gameStatus = GAME_STATUS.PLAY;
+  
+  if (previewContainer.innerHTML.trim()) {
+    previewRender();
+  }
+})
+
+
+
+
+document.getElementById('debug-submit').addEventListener('click', () => {
+  previewRender();
 })
