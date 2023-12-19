@@ -259,8 +259,10 @@ document.getElementById('submit').addEventListener('click', () => {
 })
 
 
-
-
 document.getElementById('debug-submit').addEventListener('click', () => {
+  if (gameStatus !== GAME_STATUS.PLAY) {
+    alert('디버그 모드는 지뢰의 위치를 표시하는 기능입니다. 게임 시작후 활성화 가능합니다.');
+    return;
+  }
   previewRender();
 })
