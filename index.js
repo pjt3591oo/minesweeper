@@ -12,7 +12,7 @@ let timerId = null;
 
 let gameStatus = GAME_STATUS.READY;
 
-function timeerStart() {
+function timerStart() {
   if (timerId) {
     clearInterval(timerId);
   }
@@ -68,7 +68,7 @@ function initGame(width, height, mineCount) {
 
   temp += `</ul>`;
   gameContainer.innerHTML = temp
-  timeerStart();
+  timerStart();
 }
 
 
@@ -119,7 +119,7 @@ function open(row, column) {
 
 
 function render() {
-  let falgCount = 0;
+  let flagCount = 0;
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
       const target = columns[i * MINE_MAP.length + j];
@@ -135,16 +135,16 @@ function render() {
 
       } else if (FLAG_MAP[i][j]) {
         target.classList.add("flag");
-        falgCount++;
+        flagCount++;
       }
     }
   }
 
-  document.getElementById('flag-count-text').innerText = `깃발 갯수: ${falgCount}`;
+  document.getElementById('flag-count-text').innerText = `깃발 갯수: ${flagCount}`;
 }
 
 
-function rightClickEventhandler(e) {
+function rightClickEventHandler(e) {
   e.preventDefault(); // 기본 동작(컨텍스트 메뉴 표시)을 막습니다.
   
   if (gameStatus !== GAME_STATUS.PLAY) return;
@@ -257,7 +257,7 @@ document.getElementById('submit').addEventListener('click', () => {
   
   for (let i = 0 ; i < MINE_MAP.length * MINE_MAP[0].length ; ++i) {
     columns[i].addEventListener('click', clickEventHandler);
-    columns[i].addEventListener('contextmenu', rightClickEventhandler);
+    columns[i].addEventListener('contextmenu', rightClickEventHandler);
   }
 
   gameStatus = GAME_STATUS.PLAY;
