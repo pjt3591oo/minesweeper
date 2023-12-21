@@ -1,8 +1,11 @@
 const gameContainer = document.getElementById('minesweeper');
 const previewContainer = document.getElementById('preview');
 const playTimerContainer = document.getElementById('play-time');
-const columns = document.getElementsByClassName('column');
+const endMessageContainer = document.getElementById('end-message');
+const gameEndOverayContainer = document.getElementById('gameOverOverlay');
+const restartBtnContainer = document.getElementById('restart');
 
+const columns = document.getElementsByClassName('column');
 
 let GAME_WIDTH = 0;
 let GAME_HEIGHT = 0;
@@ -11,6 +14,7 @@ let timeCount = 0;
 let timerId = null;
 
 let gameStatus = GAME_STATUS.READY;
+
 
 function timerStart() {
   if (timerId) {
@@ -23,6 +27,7 @@ function timerStart() {
     playTimerContainer.innerHTML = `플레이 시간: ${++timeCount}초`;
   }, 1000);
 }
+
 
 function createMap(rows, columns, mineCount) {
   // 초기화된 맵 생성
@@ -88,12 +93,7 @@ function clickEventHandler(e) {
     gameStatus = GAME_STATUS.END;
     timerId && clearInterval(timerId);
     showMine();
-    
-    const setTimerId = setTimeout(() => {
-      alert('졌습니다');
-      clearTimeout(setTimerId);
-    }, 0)
-    
+    failGame();
     return;
   }
 
@@ -172,7 +172,7 @@ function rightClickEventHandler(e) {
   if (checkMine()) {
     timerId && clearInterval(timerId);
     gameStatus = GAME_STATUS.END;
-    return alert('모든 지뢰를 찾았습니다.');;
+    completeGame();
   }
 }
 
@@ -243,8 +243,24 @@ function previewRender () {
   previewContainer.innerHTML = temp
 }
 
-
+restartBtnContainer.addEventListener('click', () => {
+  start();
+})
 document.getElementById('submit').addEventListener('click', () => {
+  start();
+})
+
+
+document.getElementById('debug-submit').addEventListener('click', () => {
+  if (gameStatus !== GAME_STATUS.PLAY) {
+    alert('디버그 모드는 지뢰의 위치를 표시하는 기능입니다. 게임 시작후 활성화 가능합니다.');
+    return;
+  }
+  previewRender();
+})
+
+function start() {
+  gameEndOverayContainer.style.display = 'none';
   GAME_WIDTH = parseInt(document.getElementById('size').value) || 10;
   GAME_HEIGHT = GAME_WIDTH;
   const mineCount = parseInt(document.getElementById('mine-count').value) || 15;
@@ -256,7 +272,6 @@ document.getElementById('submit').addEventListener('click', () => {
   }
 
   document.getElementById('mine-count-text').innerText = `전체 지뢰 갯수: ${mineCount}`;
-
 
 
   initGame(GAME_WIDTH, GAME_HEIGHT, mineCount);
@@ -271,16 +286,7 @@ document.getElementById('submit').addEventListener('click', () => {
   if (previewContainer.innerHTML.trim()) {
     previewRender();
   }
-})
-
-
-document.getElementById('debug-submit').addEventListener('click', () => {
-  if (gameStatus !== GAME_STATUS.PLAY) {
-    alert('디버그 모드는 지뢰의 위치를 표시하는 기능입니다. 게임 시작후 활성화 가능합니다.');
-    return;
-  }
-  previewRender();
-})
+}
 
 function validation(width, height, mineCount) {
   if (width < 10) {
@@ -304,4 +310,14 @@ function validation(width, height, mineCount) {
   }
   
   return false;
+}
+
+function failGame() {
+  gameEndOverayContainer.style.display = 'flex';
+  endMessageContainer.innerText = '지뢰를 밟았습니다.'
+}
+
+function completeGame() {
+  gameEndOverayContainer.style.display = 'flex';
+  endMessageContainer.innerText = '모든 지뢰를 찾았습니다.'
 }
