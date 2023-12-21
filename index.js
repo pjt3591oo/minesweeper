@@ -88,7 +88,12 @@ function clickEventHandler(e) {
     gameStatus = GAME_STATUS.END;
     timerId && clearInterval(timerId);
     showMine();
-    alert('졌습니다')
+    
+    const setTimerId = setTimeout(() => {
+      alert('졌습니다');
+      clearTimeout(setTimerId);
+    }, 0)
+    
     return;
   }
 
