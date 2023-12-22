@@ -159,10 +159,10 @@ function rightClickEventHandler(e) {
   if (SEARCH_MAP[row][column]) return;
 
   if (FLAG_MAP[row][column] === FLAG) {
-    FLAG_MAP[row][column] = MAP_S;
+    FLAG_MAP[row][column] = UN_FLAG;
     this.classList.remove('flag');
 
-  } else if (FLAG_MAP[row][column] === MAP_S) {
+  } else if (FLAG_MAP[row][column] === UN_FLAG) {
     FLAG_MAP[row][column] = FLAG
     this.classList.add('flag');
   }
@@ -181,7 +181,7 @@ function showMine() {
   for (let i = 0 ; i < MINE_MAP.length ; ++i) {
     for (let j = 0 ; j < MINE_MAP[i].length ; ++j) {
       if (MINE_MAP[i][j] === MAP_M) {
-        columns[i*MINE_MAP.length + j].classList.add('mine')
+        columns[i * MINE_MAP.length + j].classList.add('mine')
       }
     }
   }
